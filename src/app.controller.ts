@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -6,13 +6,27 @@ export class AppController {
   constructor(private readonly appService: AppService) { }
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  getStudents() {
+    return this.appService.getStudents();
+  }
+
+  @Patch(':id')
+  update(@Param('id', ParseIntPipe) id, @Body() { name, price, classes, total }) {
+    return this.appService.update(id, { name, price, classes, total })
+  }
+
+  @Delete(':id')
+  delete(@Param('id', ParseIntPipe) id) {
+    return this.appService.delete(id)
+  }
+
+  @Get(':id')
+  getOne(@Param('id', ParseIntPipe) id) {
+    return this.appService.getOne(id);
   }
 
   @Post()
   async create(@Body() { name, price, classes, total }) {
     return await this.appService.create({ name, price, classes, total });
-  } 
+  }
 }
- 
