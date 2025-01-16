@@ -7,7 +7,18 @@ export class AppService {
   constructor(private readonly prisma: PrismaService) { }
 
   async getStudents() {
-    return await this.prisma.classes.findMany();
+    const students = await this.prisma.classes.findMany();
+    let totalMoney = 0;
+
+    // soma total das aulas, ou seja o valor a receber
+    for(let i =0; i < students.length; i++){
+      totalMoney += Number(students[i].total)
+    }
+
+    return {
+      students,
+      totalMoney
+    }
   }
 
   async getOne(id: number,) {
