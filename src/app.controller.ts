@@ -15,6 +15,11 @@ export class AppController {
     return this.appService.update(id, { name, price, classes, total })
   }
 
+  @Patch('paid/:id')
+  paidStudent(@Param('id', ParseIntPipe) id, ) {
+    return this.appService.paid(id)
+  }
+
   @Delete(':id')
   delete(@Param('id', ParseIntPipe) id) {
     return this.appService.delete(id)

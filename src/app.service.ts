@@ -11,7 +11,7 @@ export class AppService {
     let totalMoney = 0;
 
     // soma total das aulas, ou seja o valor a receber
-    for(let i =0; i < students.length; i++){
+    for (let i = 0; i < students.length; i++) {
       totalMoney += Number(students[i].total)
     }
 
@@ -39,14 +39,36 @@ export class AppService {
     data.total = (Number(data.classes) * Number(price)).toString();
 
     return this.prisma.classes.update({
-      data:data,
-      where:{
+      data: data,
+      where: {
         id
       }
     })
   }
+  async paid(id: number) {
 
-  async delete(id: number){
+    try {
+      await this.exist(id)
+
+      const studentPayment = await this.prisma.classes.update({
+        data: {
+          classes: "0",
+          total: "0"
+        },
+        where: {
+          id
+        }
+      })
+
+      return studentPayment
+
+    } catch (error) {
+      throw error;
+    }
+
+  }
+
+  async delete(id: number) {
     await this.exist(id)
 
     return this.prisma.classes.delete({
@@ -57,15 +79,15 @@ export class AppService {
   }
 
   async create({ name, price, classes, total }: { name: string; price: string; classes: string; total: string }) {
-    
+
     total = "";
-   
+
     await this.prisma.classes.create({
       data: {
         name,
         price,
         classes,
-        total:(Number(classes) * Number(price)).toString()
+        total: (Number(classes) * Number(price)).toString()
       }
     })
   }
